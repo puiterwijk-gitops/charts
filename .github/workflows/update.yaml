@@ -1,0 +1,65 @@
+name: "Update Cluster Config pin for a cluster"
+
+on:
+  workflow_dispatch:
+    inputs:
+      cluster:
+        description: "Cluster name"
+        required: true
+        type: choice
+        options:
+          - hub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          token: "${{ secrets.PUSH_TOKEN }}"
+      - name: Cluster Config checkout
+        id: cluster-config-checkout
+        uses: actions/checkout@v4
+        with:
+          repository: "puiterwijk-gitops/cluster-config"
+          ref: "main"
+          path: "cluster-config-repo"
+          sparse-checkout: .
+          persist-credentials: false
+      - name: Print commit
+        run: |
+          echo "Commit: ${{ steps.cluster-config-checkout.outputs.commit }}"
+      - name: Delete clone
+        run: |
+          rm -rf cluster-config-repo
+      - name: Update pin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout -b update-${{ github.event.inputs.cluster }}
+          sed -i \
+            's|github.com/puiterwijk-gitops/cluster-config/bootstrap/overlays/${{ github.event.inputs.cluster }}?ref=\([a-f0-9]\{40\}\)|github.com/puiterwijk-gitops/cluster-config/bootstrap/overlays/${{ github.event.inputs.cluster }}?ref=${{ steps.cluster-config-checkout.outputs.commit }}|' \
+            bootstrap/overlays/${{ github.event.inputs.cluster }}/kustomization.yaml
+
+          git diff --exit-code && exit 0
+
+          git add bootstrap/overlays/${{ github.event.inputs.cluster }}/kustomization.yaml
+
+          git config user.name "Auto-updater (on behalf of ${{ github.actor }})"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+          git commit -m "Update pin for cluster ${{ github.event.inputs.cluster }} to ${{ steps.cluster-config-checkout.outputs.commit }}"
+          git show HEAD
+
+          git push origin update-${{ github.event.inputs.cluster }} --force
+
+          gh pr create \
+            --title "Update pin for cluster ${{ github.event.inputs.cluster }}" \
+            --body "This PR updates the pin for the cluster ${{ github.event.inputs.cluster }} to the latest commit in the cluster-config repository:  ${{ steps.cluster-config-checkout.outputs.commit }}" \
+            --base main \
+            --head update-${{ github.event.inputs.cluster }} || echo "PR probably already existed. Ignoring."

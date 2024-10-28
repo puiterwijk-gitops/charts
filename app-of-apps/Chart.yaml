@@ -1,0 +1,5 @@
+apiVersion: v2
+type: application
+name: app-of-apps
+version: 0.1.0
+description: Argo CD App-of-apps chart
