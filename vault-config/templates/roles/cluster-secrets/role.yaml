@@ -12,7 +12,7 @@ spec:
       name: "{{ .Values.authentication.serviceAccount.name }}"
   path: ocp/{{ .Values.clusterName }}/
   policies:
-    - ocp-{{ .Values.clusterName }}-cluster-secrets
+    - ocp-spoke-{{ .Values.clusterName }}-cluster-secrets
   targetServiceAccounts:
     - cluster-secrets
   targetNamespaces:
