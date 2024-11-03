@@ -1,7 +1,7 @@
 apiVersion: redhatcop.redhat.io/v1alpha1
 kind: Policy
 metadata:
-  name: ocp-spoke-{{ .Values.clusterName }}-cluster-secrets
+  name: ocp-spoke-{{ .Values.clusterAcmName }}-cluster-secrets
 spec:
   connection:
     address: "{{ .Values.connection.address }}"

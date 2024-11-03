@@ -10,11 +10,11 @@ spec:
     role: "{{ .Values.authentication.role }}"
     serviceAccount:
       name: "{{ .Values.authentication.serviceAccount.name }}"
-  path: ocp/{{ .Values.clusterName }}/
+  path: ocp/{{ .Values.clusterAcmName }}/
   policies:
-    - ocp-spoke-{{ .Values.clusterName }}-cluster-secrets
+    - ocp-spoke-{{ .Values.clusterAcmName }}-cluster-secrets
   targetServiceAccounts:
     - cluster-secrets
   targetNamespaces:
     targetNamespaces:
-      - default
+      - external-secrets
