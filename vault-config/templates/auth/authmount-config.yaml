@@ -13,3 +13,4 @@ spec:
   path: ocp/
   kubernetesHost: "https://api.{{ .Values.clusterDomain }}:6443"
   disableLocalCAJWT: true
+  kubernetesCACert: ""
