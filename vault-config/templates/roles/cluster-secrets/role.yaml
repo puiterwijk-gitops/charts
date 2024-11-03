@@ -1,0 +1,20 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: KubernetesAuthEngineRole
+metadata:
+  name: cluster-secrets
+spec:
+  connection:
+    address: "{{ .Values.connection.address }}"
+  authentication:
+    path: "{{ .Values.authentication.path }}"
+    role: "{{ .Values.authentication.role }}"
+    serviceAccount:
+      name: "{{ .Values.authentication.serviceAccount.name }}"
+  path: ocp/{{ .Values.clusterName }}/
+  policies:
+    - ocp-{{ .Values.clusterName }}-cluster-secrets
+  targetServiceAccounts:
+    - cluster-secrets
+  targetNamespaces:
+    targetNamespaces:
+      - default

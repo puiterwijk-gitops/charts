@@ -1,0 +1,7 @@
+connection:
+  address: "https://vault.puiterwijk.org"
+authentication:
+  path: ocp_hub_config
+  role: vault-configurator
+  serviceAccount:
+    name: vault-configurator

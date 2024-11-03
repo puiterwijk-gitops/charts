@@ -1,0 +1,14 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: AuthEngineMount
+metadata:
+  name: {{ .Values.clusterName }}
+spec:
+  connection:
+    address: "{{ .Values.connection.address }}"
+  authentication:
+    path: "{{ .Values.authentication.path }}"
+    role: "{{ .Values.authentication.role }}"
+    serviceAccount:
+      name: "{{ .Values.authentication.serviceAccount.name }}"
+  type: kubernetes
+  path: ocp/
