@@ -12,9 +12,15 @@ spec:
       name: "{{ .Values.authentication.serviceAccount.name }}"
   type: acl
   policy: |
-    path "/secrets/ocp/allclusters/*" {
+    path "/secrets/metadata/ocp/allclusters/*" {
       capabilities = ["read"]
     }
-    path "/secrets/ocp/cluster/{{ .Values.clusterName }}/*" {
+    path "/secrets/data/ocp/allclusters/*" {
+      capabilities = ["read"]
+    }
+    path "/secrets/metadata/ocp/cluster/{{ .Values.clusterName }}/*" {
+      capabilities = ["read"]
+    }
+    path "/secrets/data/ocp/cluster/{{ .Values.clusterName }}/*" {
       capabilities = ["read"]
     }
