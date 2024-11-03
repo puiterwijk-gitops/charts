@@ -18,9 +18,9 @@ spec:
     path "/secrets/data/ocp/allclusters/*" {
       capabilities = ["read"]
     }
-    path "/secrets/metadata/ocp/cluster/{{ .Values.clusterName }}/*" {
+    path "/secrets/metadata/ocp/cluster/{{ .Values.clusterAcmName }}/*" {
       capabilities = ["read"]
     }
-    path "/secrets/data/ocp/cluster/{{ .Values.clusterName }}/*" {
+    path "/secrets/data/ocp/cluster/{{ .Values.clusterAcmName }}/*" {
       capabilities = ["read"]
     }
